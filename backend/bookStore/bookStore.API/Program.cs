@@ -37,6 +37,13 @@ namespace bookStore.API
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.MapControllers();
+            app.UseCors(
+                x => 
+                {
+                    x.WithHeaders().AllowAnyOrigin();
+                    x.WithOrigins("http://localhost:3000");
+                    x.WithMethods().AllowAnyMethod();
+                });
             app.Run();
         }
     }
