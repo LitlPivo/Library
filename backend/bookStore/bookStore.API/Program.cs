@@ -12,10 +12,11 @@ namespace bookStore.API
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddCors();
 
             builder.Services.AddDbContext<BookStoreDbContext>(options =>
             
-            options.UseNpgsql("Server=localhost;Username=postgres;Password=Miku_1Love;Database=postgres"));
+            options.UseNpgsql("Server=localhost;Username=postgres;Database=postgres"));
 
             builder.Services.AddScoped<IBooksServices,BooksServices>();
             builder.Services.AddScoped<IBookReposytory,BookReposytory>();
@@ -34,16 +35,12 @@ namespace bookStore.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Books API v1"));
             }
 
+            app.UseCors(builder => builder.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.MapControllers();
-            app.UseCors(
-                x => 
-                {
-                    x.WithHeaders().AllowAnyOrigin();
-                    x.WithOrigins("http://localhost:3000");
-                    x.WithMethods().AllowAnyMethod();
-                });
             app.Run();
         }
     }
